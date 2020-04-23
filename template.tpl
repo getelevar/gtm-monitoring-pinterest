@@ -72,6 +72,11 @@ ___TEMPLATE_PARAMETERS___
             "paramValue": "",
             "type": "IS_MACRO_REFERENCE"
           }
+        ],
+        "valueValidators": [
+          {
+            "type": "NON_EMPTY"
+          }
         ]
       }
     ]
@@ -200,13 +205,17 @@ const callInWindow = require("callInWindow");
 
 const TAG_INFO = "elevar_gtm_tag_info";
 const addTagInformation = createQueue(TAG_INFO);
+
 const variablesUsed = [];
+const addVariable = (variable) => {
+	if (typeof variable === 'string' && variable.length > 0) variablesUsed.push(variable);
+};
 
 /* The Load Event */
+addVariable(data.userEmailVariableName);
 if (data.tagId) {
   if (data.userEmail) {
     callInWindow("pintrk", "load", data.tagId, { em: data.userEmail });
-    if (data.userEmailVariableName) variablesUsed.push(data.userEmailVariableName);
   } else {
     callInWindow("pintrk", "load", data.tagId);
   }
@@ -218,7 +227,7 @@ if (data.eventToFire !== 'NoEvent') {
     const contentObj = {};
     data.customEventData.forEach(item => {
       contentObj[item.key] = item.value;
-      if (item.variableName) variablesUsed.push(item.variableName);
+      addVariable(item.variableName);
     });
 
 	callInWindow("pintrk", "track", data.eventToFire, contentObj);
@@ -398,6 +407,8 @@ scenarios:
       tagId: "1234567890",
       tagName: "Pinterest - Purchase",
       eventToFire: "NoEvent",
+      userEmail: undefined,
+      userEmailVariableName: 'dlv - userEmail',
       gtmTagId: 2147483645,
       gtmEventId: 13
     };
@@ -412,7 +423,7 @@ scenarios:
     assertThat(calledInWindow[0][2]).isEqualTo(mockData.tagId);
 
     assertThat(window[TAG_INFO]).hasLength(1);
-    assertThat(window[TAG_INFO][0].variables).isEqualTo([]);
+    assertThat(window[TAG_INFO][0].variables).isEqualTo(['dlv - userEmail']);
     assertThat(window[TAG_INFO][0].channel).isEqualTo("pinterest");
     assertThat(window[TAG_INFO][0].tagName).isEqualTo("Pinterest - Purchase");
     assertThat(window[TAG_INFO][0].eventId).isEqualTo(13);
