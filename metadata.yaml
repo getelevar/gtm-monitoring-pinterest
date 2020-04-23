@@ -1,5 +1,5 @@
 homepage: "https://www.getelevar.com"
 documentation: "https://github.com/getelevar/gtm-monitoring-pinterest/blob/master/README.md"
 versions:
-  - sha:
+  - sha: 957aecfccfb143194103fe493a388facc2fbaf1d
     changeNotes: Initial release.
