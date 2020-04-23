@@ -63,7 +63,7 @@ ___TEMPLATE_PARAMETERS___
       },
       {
         "type": "TEXT",
-        "name": "userEmailVariable",
+        "name": "userEmailVariableName",
         "displayName": "User Email Variable Name",
         "simpleValueType": true,
         "enablingConditions": [
@@ -387,7 +387,7 @@ scenarios:
     assertThat(calledInWindow[0][3]).isEqualTo({ em: mockData.userEmail });
 
     assertThat(window[TAG_INFO]).hasLength(1);
-    assertThat(window[TAG_INFO][0].variables).isEqualTo(['dlv - userEmail']);
+    assertThat(window[TAG_INFO][0].variables).contains('dlv - userEmail');
     assertThat(window[TAG_INFO][0].channel).isEqualTo("pinterest");
     assertThat(window[TAG_INFO][0].tagName).isEqualTo("Pinterest - Purchase");
     assertThat(window[TAG_INFO][0].eventId).isEqualTo(13);
